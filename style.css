@@ -145,6 +145,36 @@ body {
     color: var(--neon-magenta);
 }
 
+/* Control Buttons */
+.control-btn {
+    padding: 6px 10px;
+    background-color: transparent;
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 2px;
+    min-width: 40px;
+}
+
+.control-btn:hover {
+    background-color: var(--neon-cyan);
+    color: #000;
+    box-shadow: 0 0 15px var(--neon-cyan);
+}
+
+.control-btn.locked {
+    border-color: var(--neon-magenta);
+    color: var(--neon-magenta);
+}
+
+.control-btn.locked:hover {
+    background-color: var(--neon-magenta);
+    box-shadow: 0 0 15px var(--neon-magenta);
+}
+
 /* Narrative Text */
 .narrative-text {
     flex: 1;
@@ -286,6 +316,31 @@ body {
     background-color: var(--neon-cyan);
     color: #000;
     box-shadow: 0 0 15px var(--neon-cyan);
+}
+
+.exit-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border-color: #666;
+    color: #666;
+}
+
+.exit-btn:disabled:hover {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+/* Expanded mode */
+.container.expanded .viewport {
+    flex: 0.4;
+}
+
+.container.expanded .narrative-panel {
+    flex: 1.6;
+}
+
+.narrative-panel.expanded .narrative-text {
+    flex: 1.5;
 }
 
 /* Modal */

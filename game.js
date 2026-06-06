@@ -9,6 +9,8 @@ class Game {
         this.selectedVerb = null;
         this.lastCheckpoint = 'entry_hall';
         this.deadBodies = {}; // Maps room ID to inventory dropped on death
+        this.navigationLocked = false;
+        this.panelExpanded = false;
 
         this.elements = {
             viewport: document.getElementById('viewport'),
@@ -22,7 +24,10 @@ class Game {
             exitButtons: document.getElementById('exit-buttons'),
             modal: document.getElementById('modal'),
             modalText: document.getElementById('modal-text'),
-            modalClose: document.getElementById('modal-close')
+            modalClose: document.getElementById('modal-close'),
+            expandBtn: document.getElementById('expand-btn'),
+            lockBtn: document.getElementById('lock-btn'),
+            container: document.querySelector('.container')
         };
 
         this.setupEventListeners();
@@ -39,6 +44,16 @@ class Game {
         // Close modal
         this.elements.modalClose.addEventListener('click', () => {
             this.elements.modal.classList.remove('active');
+        });
+
+        // Expand button
+        this.elements.expandBtn.addEventListener('click', () => {
+            this.togglePanelExpand();
+        });
+
+        // Lock button
+        this.elements.lockBtn.addEventListener('click', () => {
+            this.toggleNavigationLock();
         });
     }
 
@@ -60,6 +75,8 @@ class Game {
             this.sanity = state.sanity;
             this.lastCheckpoint = state.lastCheckpoint;
             this.deadBodies = state.deadBodies || {};
+            this.navigationLocked = state.navigationLocked || false;
+            this.panelExpanded = state.panelExpanded || false;
         }
     }
 
@@ -70,7 +87,9 @@ class Game {
             energy: this.energy,
             sanity: this.sanity,
             lastCheckpoint: this.lastCheckpoint,
-            deadBodies: this.deadBodies
+            deadBodies: this.deadBodies,
+            navigationLocked: this.navigationLocked,
+            panelExpanded: this.panelExpanded
         };
         localStorage.setItem('liminal_os_save', JSON.stringify(state));
     }
@@ -99,6 +118,9 @@ class Game {
 
         // Update stats
         this.updateStatsDisplay();
+
+        // Apply UI states
+        this.applyUIStates();
 
         // Check for dead body in this room
         this.checkForDeadBody(room);
@@ -240,10 +262,13 @@ class Game {
             const btn = document.createElement('button');
             btn.className = 'exit-btn';
             btn.textContent = direction;
+            btn.disabled = this.navigationLocked;
             btn.addEventListener('click', () => {
-                this.drainStats(3, 0);
-                this.currentRoom = roomId;
-                this.renderRoom();
+                if (!this.navigationLocked) {
+                    this.drainStats(3, 0);
+                    this.currentRoom = roomId;
+                    this.renderRoom();
+                }
             });
             this.elements.exitButtons.appendChild(btn);
         });
@@ -302,6 +327,36 @@ class Game {
     showModal(text) {
         this.elements.modalText.textContent = text;
         this.elements.modal.classList.add('active');
+    }
+
+    applyUIStates() {
+        // Apply navigation lock state
+        this.elements.lockBtn.textContent = this.navigationLocked ? '🔒' : '🔓';
+        this.elements.lockBtn.classList.toggle('locked', this.navigationLocked);
+
+        // Apply panel expand state
+        this.elements.expandBtn.textContent = this.panelExpanded ? '⬇' : '⬆';
+        this.elements.container.classList.toggle('expanded', this.panelExpanded);
+    }
+
+    toggleNavigationLock() {
+        this.navigationLocked = !this.navigationLocked;
+        this.elements.lockBtn.textContent = this.navigationLocked ? '🔒' : '🔓';
+        this.elements.lockBtn.classList.toggle('locked', this.navigationLocked);
+
+        // Update exit buttons
+        document.querySelectorAll('.exit-btn').forEach(btn => {
+            btn.disabled = this.navigationLocked;
+        });
+
+        this.saveGameState();
+    }
+
+    togglePanelExpand() {
+        this.panelExpanded = !this.panelExpanded;
+        this.elements.expandBtn.textContent = this.panelExpanded ? '⬇' : '⬆';
+        this.elements.container.classList.toggle('expanded', this.panelExpanded);
+        this.saveGameState();
     }
 }
 
