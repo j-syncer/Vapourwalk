@@ -1,16 +1,17 @@
 class Game {
     constructor() {
-        this.currentRoom = 'entry_hall';
+        this.currentRoom = 'room_01_01_arrival';
         this.inventory = [];
         this.energy = 100;
         this.maxEnergy = 100;
         this.sanity = 100;
         this.maxSanity = 100;
         this.selectedVerb = null;
-        this.lastCheckpoint = 'entry_hall';
-        this.deadBodies = {}; // Maps room ID to inventory dropped on death
+        this.lastCheckpoint = 'room_01_01_arrival';
+        this.deadBodies = {}; 
         this.navigationLocked = false;
         this.panelExpanded = false;
+        this.unlockedExits = {}; // Tracks permanently opened doors
 
         this.elements = {
             viewport: document.getElementById('viewport'),
@@ -36,28 +37,24 @@ class Game {
     }
 
     setupEventListeners() {
-        // Verb selection
         document.querySelectorAll('.verb-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.selectVerb(e.target.dataset.verb));
+            btn.addEventListener('click', (e) => this.selectVerb(e.target.dataset.verb, e));
         });
 
-        // Close modal
         this.elements.modalClose.addEventListener('click', () => {
             this.elements.modal.classList.remove('active');
         });
 
-        // Expand button
         this.elements.expandBtn.addEventListener('click', () => {
             this.togglePanelExpand();
         });
 
-        // Lock button
         this.elements.lockBtn.addEventListener('click', () => {
             this.toggleNavigationLock();
         });
     }
 
-    selectVerb(verb) {
+    selectVerb(verb, event) {
         this.selectedVerb = verb;
         document.querySelectorAll('.verb-btn').forEach(btn => {
             btn.classList.remove('active');
@@ -69,14 +66,15 @@ class Game {
         const saved = localStorage.getItem('liminal_os_save');
         if (saved) {
             const state = JSON.parse(saved);
-            this.currentRoom = state.currentRoom;
-            this.inventory = state.inventory;
-            this.energy = state.energy;
-            this.sanity = state.sanity;
-            this.lastCheckpoint = state.lastCheckpoint;
+            this.currentRoom = state.currentRoom || 'room_01_01_arrival';
+            this.inventory = state.inventory || [];
+            this.energy = state.energy ?? 100;
+            this.sanity = state.sanity ?? 100;
+            this.lastCheckpoint = state.lastCheckpoint || 'room_01_01_arrival';
             this.deadBodies = state.deadBodies || {};
             this.navigationLocked = state.navigationLocked || false;
             this.panelExpanded = state.panelExpanded || false;
+            this.unlockedExits = state.unlockedExits || {};
         }
     }
 
@@ -89,7 +87,8 @@ class Game {
             lastCheckpoint: this.lastCheckpoint,
             deadBodies: this.deadBodies,
             navigationLocked: this.navigationLocked,
-            panelExpanded: this.panelExpanded
+            panelExpanded: this.panelExpanded,
+            unlockedExits: this.unlockedExits
         };
         localStorage.setItem('liminal_os_save', JSON.stringify(state));
     }
@@ -98,38 +97,29 @@ class Game {
         const room = GAME_DB.rooms[this.currentRoom];
         if (!room) return;
 
-        // Update viewport
         this.elements.viewport.style.backgroundImage = `url('${room.img}')`;
         this.elements.locationName.textContent = room.title;
 
-        // Render narrative
         this.elements.narrativeText.innerHTML = this.processNarrative(room.desc, room);
 
-        // Attach click handlers to clickable text
         this.elements.narrativeText.querySelectorAll('.clickable-target').forEach(target => {
             target.addEventListener('click', () => this.handleClickable(target, room));
         });
 
-        // Render exits
         this.renderExits(room);
-
-        // Render inventory
         this.renderInventory();
-
-        // Update stats
         this.updateStatsDisplay();
-
-        // Apply UI states
         this.applyUIStates();
-
-        // Check for dead body in this room
         this.checkForDeadBody(room);
+
+        if (room.checkpoint) {
+            this.lastCheckpoint = room.id;
+        }
 
         this.saveGameState();
     }
 
     processNarrative(desc, room) {
-        // Check if player died in this room
         if (this.deadBodies[room.id]) {
             const bodyIntro = `<p style="color: #ff006e; text-shadow: 0 0 10px #ff006e;">A faceless marble statue stands here, its arms at its sides. Your inventory is scattered at its feet.</p>`;
             return bodyIntro + '<p>' + desc + '</p>';
@@ -161,7 +151,7 @@ class Game {
                 const item = scenery.loot[0];
                 this.addToInventory(item);
                 this.showModal(`You obtained: ${GAME_DB.items[item].name}`);
-                scenery.loot = []; // Remove loot after taking
+                scenery.loot = []; 
                 this.drainStats(3, 0);
             } else {
                 this.penalizeWrongClick();
@@ -184,6 +174,13 @@ class Game {
                     const item = scenery.loot[0];
                     this.addToInventory(item);
                 }
+                
+                // Process Room Unlocking
+                if (scenery.unlocksExit) {
+                    const unlockKey = `${room.id}_${scenery.unlocksExit}`;
+                    this.unlockedExits[unlockKey] = true;
+                }
+
                 this.drainStats(5, 2);
             } else {
                 this.penalizeWrongClick();
@@ -213,7 +210,7 @@ class Game {
 
     penalizeWrongClick() {
         this.showModal('That is not helpful.');
-        this.drainStats(5, 3); // Energy penalty for wasting time
+        this.drainStats(5, 3); 
     }
 
     drainStats(energyCost, sanityCost) {
@@ -226,11 +223,9 @@ class Game {
     }
 
     triggerDeath() {
-        // Store current inventory at this location
         this.deadBodies[this.currentRoom] = [...this.inventory];
         this.inventory = [];
 
-        // Reset to checkpoint
         this.currentRoom = this.lastCheckpoint;
         this.energy = 100;
         this.sanity = 100;
@@ -242,7 +237,6 @@ class Game {
     checkForDeadBody(room) {
         if (this.deadBodies[room.id]) {
             const bodyItems = this.deadBodies[room.id];
-            // Add a hidden clickable for looting the body
             const desc = this.elements.narrativeText.innerHTML;
             const lootBtn = `<p style="color: #00f5ff; margin-top: 10px;"><span class="clickable-target loot-body" style="cursor: pointer; text-decoration: underline;">Loot the statue's feet for your belongings</span></p>`;
             this.elements.narrativeText.innerHTML = desc + lootBtn;
@@ -258,15 +252,20 @@ class Game {
 
     renderExits(room) {
         this.elements.exitButtons.innerHTML = '';
-        Object.entries(room.exits).forEach(([direction, roomId]) => {
+        Object.entries(room.exits).forEach(([direction, exitData]) => {
             const btn = document.createElement('button');
             btn.className = 'exit-btn';
-            btn.textContent = direction;
-            btn.disabled = this.navigationLocked;
+            
+            const unlockKey = `${room.id}_${direction}`;
+            const isLocked = exitData.locked && !this.unlockedExits[unlockKey];
+
+            btn.textContent = isLocked ? `${direction} 🔒` : direction;
+            btn.disabled = this.navigationLocked || isLocked;
+
             btn.addEventListener('click', () => {
-                if (!this.navigationLocked) {
+                if (!this.navigationLocked && !isLocked) {
                     this.drainStats(3, 0);
-                    this.currentRoom = roomId;
+                    this.currentRoom = exitData.target;
                     this.renderRoom();
                 }
             });
@@ -300,7 +299,6 @@ class Game {
         this.elements.sanityBar.style.width = sanityPercent + '%';
         this.elements.sanityNum.textContent = `${this.sanity}/${this.maxSanity}`;
 
-        // Warning states
         if (this.energy < 25) {
             this.elements.energyBar.parentElement.style.borderColor = '#ff006e';
         } else {
@@ -330,11 +328,9 @@ class Game {
     }
 
     applyUIStates() {
-        // Apply navigation lock state
         this.elements.lockBtn.textContent = this.navigationLocked ? '🔒' : '🔓';
         this.elements.lockBtn.classList.toggle('locked', this.navigationLocked);
 
-        // Apply panel expand state
         this.elements.expandBtn.textContent = this.panelExpanded ? '⬇' : '⬆';
         this.elements.container.classList.toggle('expanded', this.panelExpanded);
     }
@@ -344,9 +340,11 @@ class Game {
         this.elements.lockBtn.textContent = this.navigationLocked ? '🔒' : '🔓';
         this.elements.lockBtn.classList.toggle('locked', this.navigationLocked);
 
-        // Update exit buttons
         document.querySelectorAll('.exit-btn').forEach(btn => {
-            btn.disabled = this.navigationLocked;
+            // Only toggle buttons that aren't inherently locked by room logic
+            if (!btn.textContent.includes('🔒')) {
+                btn.disabled = this.navigationLocked;
+            }
         });
 
         this.saveGameState();
@@ -360,7 +358,8 @@ class Game {
     }
 }
 
-// Initialize game when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Clear save on load to prevent loading old non-episodic save states during initial deployment
+    localStorage.removeItem('liminal_os_save'); 
     window.game = new Game();
 });
