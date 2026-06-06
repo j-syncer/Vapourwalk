@@ -12,6 +12,7 @@ class Game {
         this.navigationLocked = false;
         this.panelExpanded = false;
         this.unlockedExits = {}; // Tracks permanently opened doors
+        this.harvestedScenery = {}; // Tracks scenery whose loot has been taken
 
         this.elements = {
             viewport: document.getElementById('viewport'),
@@ -75,6 +76,7 @@ class Game {
             this.navigationLocked = state.navigationLocked || false;
             this.panelExpanded = state.panelExpanded || false;
             this.unlockedExits = state.unlockedExits || {};
+            this.harvestedScenery = state.harvestedScenery || {};
         }
     }
 
@@ -88,7 +90,8 @@ class Game {
             deadBodies: this.deadBodies,
             navigationLocked: this.navigationLocked,
             panelExpanded: this.panelExpanded,
-            unlockedExits: this.unlockedExits
+            unlockedExits: this.unlockedExits,
+            harvestedScenery: this.harvestedScenery
         };
         localStorage.setItem('liminal_os_save', JSON.stringify(state));
     }
@@ -147,11 +150,13 @@ class Game {
             this.showModal(scenery.description);
             this.drainStats(2, 1);
         } else if (verb === 'TAKE') {
-            if (scenery.loot.length > 0) {
+            const takeKey = `${room.id}_${targetId}`;
+            if (scenery.loot.length > 0 && !this.harvestedScenery[takeKey]) {
                 const item = scenery.loot[0];
                 this.addToInventory(item);
                 this.showModal(`You obtained: ${GAME_DB.items[item].name}`);
-                scenery.loot = []; 
+                scenery.loot = [];
+                this.harvestedScenery[takeKey] = true;
                 this.drainStats(3, 0);
             } else {
                 this.penalizeWrongClick();
@@ -170,9 +175,12 @@ class Game {
 
             if (hasRequiredTag) {
                 this.showModal(scenery.description);
-                if (scenery.loot.length > 0) {
+                const useKey = `${room.id}_${targetId}`;
+                if (scenery.loot.length > 0 && !this.harvestedScenery[useKey]) {
                     const item = scenery.loot[0];
                     this.addToInventory(item);
+                    scenery.loot = [];
+                    this.harvestedScenery[useKey] = true;
                 }
                 
                 // Process Room Unlocking
@@ -359,7 +367,5 @@ class Game {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Clear save on load to prevent loading old non-episodic save states during initial deployment
-    localStorage.removeItem('liminal_os_save'); 
     window.game = new Game();
 });
