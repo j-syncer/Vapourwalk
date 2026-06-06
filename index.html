@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIMINAL.OS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Top Half: Dynamic Background -->
+        <div class="viewport" id="viewport"></div>
+
+        <!-- Bottom Half: Narrative & Controls -->
+        <div class="narrative-panel">
+            <div class="stats-bar">
+                <div class="stat energy">
+                    <span class="stat-label">ENERGY</span>
+                    <div class="stat-bar-fill">
+                        <div class="stat-value" id="energy-bar"></div>
+                    </div>
+                    <span class="stat-number" id="energy-num">100/100</span>
+                </div>
+                <div class="stat sanity">
+                    <span class="stat-label">SANITY</span>
+                    <div class="stat-bar-fill">
+                        <div class="stat-value" id="sanity-bar"></div>
+                    </div>
+                    <span class="stat-number" id="sanity-num">100/100</span>
+                </div>
+                <div class="stat location">
+                    <span class="stat-label">LOCATION</span>
+                    <span class="stat-number" id="location-name">---</span>
+                </div>
+            </div>
+
+            <div class="narrative-text" id="narrative-text"></div>
+
+            <div class="action-dock">
+                <div class="verb-selector">
+                    <button class="verb-btn" data-verb="INSPECT">INSPECT</button>
+                    <button class="verb-btn" data-verb="TAKE">TAKE</button>
+                    <button class="verb-btn" data-verb="USE">USE</button>
+                    <button class="verb-btn" data-verb="CONSUME">CONSUME</button>
+                </div>
+                <div class="inventory-display">
+                    <span class="inventory-label">INVENTORY:</span>
+                    <div class="inventory-list" id="inventory-list"></div>
+                </div>
+                <div class="exit-buttons" id="exit-buttons"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for interaction results -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-text" id="modal-text"></div>
+            <button class="modal-close" id="modal-close">CONTINUE</button>
+        </div>
+    </div>
+
+    <script src="db.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
