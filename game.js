@@ -1,13 +1,13 @@
 class Game {
     constructor() {
-        this.currentRoom = 'room_01_01_arrival';
+        this.currentRoom = 'room_02_01_bedroom';
         this.inventory = [];
         this.energy = 100;
         this.maxEnergy = 100;
         this.sanity = 100;
         this.maxSanity = 100;
         this.selectedVerb = null;
-        this.lastCheckpoint = 'room_01_01_arrival';
+        this.lastCheckpoint = 'room_02_01_bedroom';
         this.deadBodies = {}; 
         this.navigationLocked = false;
         this.panelExpanded = false;
@@ -68,11 +68,11 @@ class Game {
         const saved = localStorage.getItem('liminal_os_save');
         if (saved) {
             const state = JSON.parse(saved);
-            this.currentRoom = state.currentRoom || 'room_01_01_arrival';
+            this.currentRoom = state.currentRoom || 'room_02_01_bedroom';
             this.inventory = state.inventory || [];
             this.energy = state.energy ?? 100;
             this.sanity = state.sanity ?? 100;
-            this.lastCheckpoint = state.lastCheckpoint || 'room_01_01_arrival';
+            this.lastCheckpoint = state.lastCheckpoint || 'room_02_01_bedroom';
             this.deadBodies = state.deadBodies || {};
             this.navigationLocked = state.navigationLocked || false;
             this.panelExpanded = state.panelExpanded || false;
