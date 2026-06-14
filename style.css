@@ -417,6 +417,87 @@ body {
     animation: flicker 0.15s infinite;
 }
 
+/* === ROOM DYNAMIC EFFECTS === */
+
+/* Rain — two-layer diagonal streaks */
+.effect-rain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+    background-image: repeating-linear-gradient(
+        96deg,
+        transparent 0px,
+        transparent 6px,
+        rgba(140, 190, 252, 0.048) 6px,
+        rgba(140, 190, 252, 0.048) 7px
+    );
+    background-size: 20px 100px;
+    animation: rain-fall 0.28s linear infinite;
+}
+
+.effect-rain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+        97deg,
+        transparent 0px,
+        transparent 16px,
+        rgba(120, 168, 240, 0.032) 16px,
+        rgba(120, 168, 240, 0.032) 17px
+    );
+    background-size: 30px 100px;
+    animation: rain-fall 0.5s linear infinite;
+}
+
+@keyframes rain-fall {
+    from { background-position: 0 0; }
+    to   { background-position: 0 100px; }
+}
+
+/* Lightning — full-viewport white flash, double-strike */
+.effect-lightning {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    background: rgba(210, 235, 255, 1);
+}
+
+.effect-lightning.flash-active {
+    animation: lightning-flash 0.65s ease-out forwards;
+}
+
+@keyframes lightning-flash {
+    0%   { opacity: 0.88; }
+    10%  { opacity: 0.88; }
+    18%  { opacity: 0; }
+    28%  { opacity: 0.52; }
+    38%  { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+/* Thunder — viewport shake */
+@keyframes thunder-shake {
+    0%   { transform: translate(0, 0); }
+    8%   { transform: translate(-5px, -3px); }
+    18%  { transform: translate(5px, 3px); }
+    28%  { transform: translate(-4px, 4px); }
+    38%  { transform: translate(4px, -3px); }
+    48%  { transform: translate(-3px, 2px); }
+    58%  { transform: translate(3px, -2px); }
+    68%  { transform: translate(-2px, 1px); }
+    78%  { transform: translate(2px, -1px); }
+    88%  { transform: translate(-1px, 0); }
+    100% { transform: translate(0, 0); }
+}
+
+.viewport.viewport-shaking {
+    animation: thunder-shake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .stat {

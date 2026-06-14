@@ -1,4 +1,95 @@
 // LIMINAL.OS Game Database
+
+const BEDROOM_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  <rect width="800" height="600" fill="#06070f"/>
+  <rect width="800" height="390" fill="#080916"/>
+  <rect x="282" y="30" width="236" height="230" fill="#050812"/>
+  <rect x="274" y="22" width="252" height="246" fill="none" stroke="#181c38" stroke-width="12" rx="4"/>
+  <radialGradient id="wg" cx="50%" cy="50%">
+    <stop offset="0%" stop-color="#101a40" stop-opacity="0.7"/>
+    <stop offset="100%" stop-color="#050812" stop-opacity="0"/>
+  </radialGradient>
+  <rect x="282" y="30" width="236" height="230" fill="url(#wg)"/>
+  <line x1="400" y1="30" x2="400" y2="260" stroke="#181c38" stroke-width="8"/>
+  <line x1="282" y1="145" x2="518" y2="145" stroke="#181c38" stroke-width="8"/>
+  <g stroke="#1a3264" stroke-width="1.5" opacity="0.45">
+    <line x1="306" y1="34" x2="299" y2="138"/>
+    <line x1="328" y1="40" x2="321" y2="138"/>
+    <line x1="352" y1="32" x2="345" y2="128"/>
+    <line x1="375" y1="44" x2="368" y2="140"/>
+    <line x1="420" y1="36" x2="413" y2="136"/>
+    <line x1="446" y1="42" x2="439" y2="140"/>
+    <line x1="470" y1="33" x2="463" y2="130"/>
+    <line x1="494" y1="46" x2="487" y2="140"/>
+    <line x1="298" y1="152" x2="291" y2="256"/>
+    <line x1="336" y1="148" x2="329" y2="252"/>
+    <line x1="367" y1="153" x2="360" y2="257"/>
+    <line x1="430" y1="150" x2="423" y2="254"/>
+    <line x1="462" y1="148" x2="455" y2="252"/>
+    <line x1="502" y1="154" x2="495" y2="256"/>
+  </g>
+  <rect x="75" y="378" width="650" height="28" fill="#0c0d1c" rx="2"/>
+  <rect x="75" y="406" width="650" height="58" fill="#090a16"/>
+  <rect x="75" y="378" width="650" height="3" fill="#12152c"/>
+  <rect x="100" y="335" width="18" height="46" fill="#0a0a14"/>
+  <rect x="682" y="335" width="18" height="46" fill="#0a0a14"/>
+  <rect x="372" y="322" width="56" height="58" fill="#090912"/>
+  <rect x="348" y="372" width="104" height="10" fill="#0c0c1a" rx="2"/>
+  <rect x="185" y="162" width="430" height="222" fill="#0b0b18" rx="6"/>
+  <rect x="196" y="173" width="408" height="200" fill="#020810" rx="2"/>
+  <radialGradient id="sg" cx="50%" cy="50%">
+    <stop offset="0%" stop-color="#003a58" stop-opacity="0.5"/>
+    <stop offset="100%" stop-color="#010508" stop-opacity="0"/>
+  </radialGradient>
+  <rect x="196" y="173" width="408" height="200" fill="url(#sg)"/>
+  <text x="212" y="203" font-family="monospace" font-size="12" fill="#00ccea" opacity="0.95">LIMINAL.OS :: TERMINAL v2.1</text>
+  <text x="212" y="224" font-family="monospace" font-size="11" fill="#009bbd" opacity="0.8">&gt; scanning network...</text>
+  <text x="212" y="244" font-family="monospace" font-size="11" fill="#007899" opacity="0.7">&gt; anomaly: sector 7 / source: UNKNOWN</text>
+  <text x="212" y="264" font-family="monospace" font-size="11" fill="#005577" opacity="0.55">&gt; signal degrading</text>
+  <text x="212" y="284" font-family="monospace" font-size="11" fill="#004466" opacity="0.45">WARNING: YOU SHOULD NOT BE HERE</text>
+  <text x="212" y="350" font-family="monospace" font-size="11" fill="#00ccea" opacity="0.85">_</text>
+  <radialGradient id="mg" cx="50%" cy="40%">
+    <stop offset="0%" stop-color="#002244" stop-opacity="0.28"/>
+    <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+  </radialGradient>
+  <ellipse cx="400" cy="320" rx="290" ry="210" fill="url(#mg)"/>
+  <rect x="228" y="382" width="220" height="16" fill="#090912" rx="2"/>
+  <rect x="234" y="384" width="208" height="6" fill="#0e0e1e" rx="1" opacity="0.6"/>
+  <ellipse cx="488" cy="389" rx="19" ry="12" fill="#090912"/>
+  <line x1="488" y1="378" x2="488" y2="392" stroke="#0e0e1e" stroke-width="1.5" opacity="0.6"/>
+  <rect x="90" y="332" width="16" height="48" fill="#260040" rx="1"/>
+  <rect x="108" y="325" width="22" height="55" fill="#002040" rx="1"/>
+  <rect x="132" y="336" width="15" height="44" fill="#241a00" rx="1"/>
+  <rect x="149" y="328" width="19" height="52" fill="#200028" rx="1"/>
+  <rect x="170" y="337" width="14" height="43" fill="#002020" rx="1"/>
+  <rect x="558" y="346" width="30" height="34" fill="#0e0e1c" rx="3"/>
+  <ellipse cx="573" cy="346" rx="15" ry="5" fill="#0e0e1c"/>
+  <path d="M588,353 Q602,353 602,362 Q602,371 588,371" fill="none" stroke="#0e0e1c" stroke-width="3.5"/>
+  <rect x="612" y="358" width="74" height="20" fill="#100c1c" rx="1" transform="rotate(-6 649 368)"/>
+  <rect x="174" y="286" width="5" height="94" fill="#111122"/>
+  <rect x="152" y="280" width="48" height="10" fill="#111122" rx="5"/>
+  <linearGradient id="ls" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="#000" stop-opacity="0.88"/>
+    <stop offset="22%" stop-color="#000" stop-opacity="0"/>
+  </linearGradient>
+  <rect width="176" height="600" fill="url(#ls)"/>
+  <linearGradient id="rs" x1="1" y1="0" x2="0" y2="0">
+    <stop offset="0%" stop-color="#000" stop-opacity="0.88"/>
+    <stop offset="22%" stop-color="#000" stop-opacity="0"/>
+  </linearGradient>
+  <rect x="624" width="176" height="600" fill="url(#rs)"/>
+  <linearGradient id="ts" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#000" stop-opacity="0.65"/>
+    <stop offset="14%" stop-color="#000" stop-opacity="0"/>
+  </linearGradient>
+  <rect width="800" height="94" fill="url(#ts)"/>
+  <linearGradient id="bs" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="60%" stop-color="#000" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000" stop-opacity="0.96"/>
+  </linearGradient>
+  <rect y="390" width="800" height="210" fill="url(#bs)"/>
+</svg>`;
+
 const GAME_DB = {
     items: {
         rusty_pipe: {
@@ -68,6 +159,16 @@ const GAME_DB = {
             sanityRestore: -5,
             energyRestore: 10,
             description: 'Bioluminescent algae in a sealed vial. It glows faintly.'
+        },
+        torn_journal: {
+            id: 'torn_journal',
+            name: 'Torn Journal',
+            tags: ['document', 'key'],
+            fragility: 0.6,
+            consumable: false,
+            energyCost: 0,
+            sanityCost: -3,
+            description: 'Damaged pages in cramped, frantic handwriting. Mentions of doors, sector 7, and a countdown no one finished.'
         }
     },
 
@@ -108,12 +209,50 @@ const GAME_DB = {
             sequence: 2,
             title: '01: THE MARBLE CORRIDOR',
             img: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800" height="600"%3E%3Crect fill="%23000" width="800" height="600"/%3E%3Crect fill="%2300f5ff" opacity="0.15" width="800" height="600"/%3E%3Cpath stroke="%23ff006e" stroke-width="2" d="M 0 300 Q 100 200, 200 300 T 400 300 T 600 300 T 800 300"/%3E%3C/svg%3E',
-            desc: `An impossibly long corridor lined with pale marble. Your footsteps echo with an unnatural clarity. To the south is the arrival room.`,
+            desc: `An impossibly long corridor lined with pale marble. Your footsteps echo with an unnatural clarity. To the south is the arrival room. A door to the north stands ajar.`,
             exits: {
-                'SOUTH': { target: 'room_01_01_arrival', locked: false }
+                'SOUTH': { target: 'room_01_01_arrival', locked: false },
+                'NORTH': { target: 'room_02_01_bedroom', locked: false }
             },
             scenery: {},
             checkpoint: false
+        },
+
+        room_02_01_bedroom: {
+            id: 'room_02_01_bedroom',
+            episode: 2,
+            sequence: 1,
+            title: '02: THE SLEEPLESS ROOM',
+            img: 'data:image/svg+xml,' + encodeURIComponent(BEDROOM_SVG),
+            effects: ['rain', 'lightning'],
+            desc: `A desk occupies the center of a dark room. A monitor casts pale blue light across scattered papers and an untouched mug. Rain hammers against the <span class="clickable-target" data-target-id="rain_window">window</span> — each sheet of water catching the light differently. A <span class="clickable-target" data-target-id="desk_monitor">terminal session</span> idles, cursor blinking. Beneath the keyboard, a <span class="clickable-target" data-target-id="desk_journal">journal</span> waits with dog-eared pages.`,
+            exits: {
+                'SOUTH': { target: 'room_01_02_corridor', locked: false }
+            },
+            scenery: {
+                rain_window: {
+                    id: 'rain_window',
+                    name: 'Rain Window',
+                    required_tags: [],
+                    description: 'Rain scores diagonal lines down the glass. Beyond: a city reduced to amber grid lines in the dark. A bolt of lightning erases all colour for a half-second, leaving its negative burned in your eyes.',
+                    loot: []
+                },
+                desk_monitor: {
+                    id: 'desk_monitor',
+                    name: 'Terminal',
+                    required_tags: [],
+                    description: 'The terminal log scrolls with fragmented output. Near the bottom a line repeats at irregular intervals: "> YOU SHOULD NOT BE HERE." The cursor blinks, waiting for a command you do not know.',
+                    loot: []
+                },
+                desk_journal: {
+                    id: 'desk_journal',
+                    name: 'Journal',
+                    required_tags: [],
+                    description: 'Handwritten notes, rain-warped. One entry remains legible: "Day 47: The door does not open anymore. But I can hear something on the other side."',
+                    loot: ['torn_journal']
+                }
+            },
+            checkpoint: true
         }
     }
 };

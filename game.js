@@ -12,6 +12,8 @@ class Game {
         this.navigationLocked = false;
         this.panelExpanded = false;
         this.unlockedExits = {}; // Tracks permanently opened doors
+        this._effectTimers = [];
+        this._effectsRoomId = null;
 
         this.elements = {
             viewport: document.getElementById('viewport'),
@@ -97,7 +99,14 @@ class Game {
         const room = GAME_DB.rooms[this.currentRoom];
         if (!room) return;
 
-        this.elements.viewport.style.backgroundImage = `url('${room.img}')`;
+        // Restart effects only when the room actually changes
+        if (this._effectsRoomId !== this.currentRoom) {
+            this.stopRoomEffects();
+            this._effectsRoomId = this.currentRoom;
+            this.elements.viewport.style.backgroundImage = `url('${room.img}')`;
+            this.startRoomEffects(room);
+        }
+
         this.elements.locationName.textContent = room.title;
 
         this.elements.narrativeText.innerHTML = this.processNarrative(room.desc, room);
@@ -333,6 +342,57 @@ class Game {
 
         this.elements.expandBtn.textContent = this.panelExpanded ? '⬇' : '⬆';
         this.elements.container.classList.toggle('expanded', this.panelExpanded);
+    }
+
+    startRoomEffects(room) {
+        if (!room.effects || room.effects.length === 0) return;
+        if (room.effects.includes('rain')) this._startRainEffect();
+        if (room.effects.includes('lightning')) this._scheduleLightning();
+    }
+
+    stopRoomEffects() {
+        this._effectTimers.forEach(id => clearTimeout(id));
+        this._effectTimers = [];
+        document.querySelectorAll('.room-effect').forEach(el => el.remove());
+        this.elements.viewport.classList.remove('viewport-shaking');
+        this._effectsRoomId = null;
+    }
+
+    _startRainEffect() {
+        const el = document.createElement('div');
+        el.className = 'room-effect effect-rain';
+        this.elements.viewport.appendChild(el);
+    }
+
+    _scheduleLightning() {
+        const delay = 5000 + Math.random() * 12000;
+        const id = setTimeout(() => {
+            this._triggerLightning();
+            this._scheduleLightning();
+        }, delay);
+        this._effectTimers.push(id);
+    }
+
+    _triggerLightning() {
+        let flash = this.elements.viewport.querySelector('.effect-lightning');
+        if (!flash) {
+            flash = document.createElement('div');
+            flash.className = 'room-effect effect-lightning';
+            this.elements.viewport.appendChild(flash);
+        }
+        flash.classList.remove('flash-active');
+        void flash.offsetWidth; // force reflow to restart animation
+        flash.classList.add('flash-active');
+
+        // Thunder shake, slightly delayed after the flash
+        const shakeId = setTimeout(() => {
+            this.elements.viewport.classList.add('viewport-shaking');
+            const clearId = setTimeout(() => {
+                this.elements.viewport.classList.remove('viewport-shaking');
+            }, 550);
+            this._effectTimers.push(clearId);
+        }, 120 + Math.random() * 160);
+        this._effectTimers.push(shakeId);
     }
 
     toggleNavigationLock() {
