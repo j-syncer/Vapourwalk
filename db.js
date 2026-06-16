@@ -223,7 +223,7 @@ const GAME_DB = {
             episode: 2,
             sequence: 1,
             title: '02: THE SLEEPLESS ROOM',
-            img: 'data:image/svg+xml,' + encodeURIComponent(BEDROOM_SVG),
+            img: './assets/bedroom.png',
             effects: ['rain', 'lightning'],
             desc: `A desk occupies the center of a dark room. A monitor casts pale blue light across scattered papers and an untouched mug. Rain hammers against the <span class="clickable-target" data-target-id="rain_window">window</span> — each sheet of water catching the light differently. A <span class="clickable-target" data-target-id="desk_monitor">terminal session</span> idles, cursor blinking. Beneath the keyboard, a <span class="clickable-target" data-target-id="desk_journal">journal</span> waits with dog-eared pages.`,
             exits: {
