@@ -21,12 +21,14 @@ body {
     font-family: 'Courier New', monospace;
     overflow: hidden;
     height: 100vh;
+    height: 100dvh; /* dynamic viewport height — excludes mobile browser chrome */
 }
 
 .container {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    height: 100dvh;
     background: linear-gradient(135deg, var(--dark-bg) 0%, #1a0033 100%);
 }
 
@@ -220,6 +222,7 @@ body {
     background-color: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 16, 240, 0.3);
     border-radius: 3px;
+    flex-shrink: 0; /* never compress — keeps buttons always visible */
 }
 
 .verb-selector {
@@ -251,8 +254,16 @@ body {
 
 .verb-btn.active {
     background-color: var(--neon-magenta);
-    color: #000;
-    box-shadow: 0 0 20px var(--neon-magenta);
+    color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 12px var(--neon-magenta), 0 0 30px rgba(255, 0, 110, 0.5), inset 0 0 8px rgba(255, 255, 255, 0.15);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+    animation: verb-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes verb-pulse {
+    0%, 100% { box-shadow: 0 0 12px var(--neon-magenta), 0 0 30px rgba(255, 0, 110, 0.5), inset 0 0 8px rgba(255, 255, 255, 0.15); }
+    50%       { box-shadow: 0 0 20px var(--neon-magenta), 0 0 55px rgba(255, 0, 110, 0.7), inset 0 0 12px rgba(255, 255, 255, 0.2); }
 }
 
 .inventory-display {
@@ -509,7 +520,12 @@ body {
 @media (max-width: 600px), (max-width: 900px) and (orientation: portrait) {
     /* Give narrative panel more vertical room */
     .viewport { flex: 0.6; }
-    .narrative-panel { flex: 1.4; padding: 8px; gap: 5px; }
+    .narrative-panel {
+        flex: 1.4;
+        padding: 8px;
+        padding-bottom: max(8px, env(safe-area-inset-bottom)); /* clears iPhone home bar */
+        gap: 5px;
+    }
 
     /* Stats bar: let it wrap to two rows */
     .stats-bar {
