@@ -179,7 +179,7 @@ const GAME_DB = {
             sequence: 1,
             title: '01: THE ARRIVAL',
             img: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800" height="600"%3E%3Crect fill="%230a0e27" width="800" height="600"/%3E%3Crect fill="%23ff10f0" opacity="0.1" width="800" height="600"/%3E%3Ctext x="400" y="300" text-anchor="middle" font-size="48" fill="%23ff006e" font-family="monospace"%3ELEVEL 01%3C/text%3E%3C/svg%3E',
-            desc: `You materialize on cold tile. A flickering neon sign above simply reads '01'. To the north, a <span class="clickable-target" data-target-id="blast_door">heavy security door</span> blocks the path into the maze. A <span class="clickable-target" data-target-id="keycard">plastic card</span> lies discarded on the floor.`,
+            desc: `Cold tile under your palms. You are on the floor. You do not remember falling.\n\nA flickering neon sign reads '01'. The air smells like ozone and old carpet. Somewhere close, something electrical is failing. To the north, a <span class="clickable-target" data-target-id="blast_door">heavy security door</span> stands sealed. A <span class="clickable-target" data-target-id="keycard">plastic card</span> lies on the tile a few feet away, as though it was left for you.`,
             exits: {
                 'NORTH': { target: 'room_01_02_corridor', locked: true, unlockTag: 'security' }
             },
@@ -209,10 +209,9 @@ const GAME_DB = {
             sequence: 2,
             title: '01: THE MARBLE CORRIDOR',
             img: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800" height="600"%3E%3Crect fill="%23000" width="800" height="600"/%3E%3Crect fill="%2300f5ff" opacity="0.15" width="800" height="600"/%3E%3Cpath stroke="%23ff006e" stroke-width="2" d="M 0 300 Q 100 200, 200 300 T 400 300 T 600 300 T 800 300"/%3E%3C/svg%3E',
-            desc: `An impossibly long corridor lined with pale marble. Your footsteps echo with an unnatural clarity. To the south is the arrival room. A door to the north stands ajar.`,
+            desc: `An impossibly long corridor lined with pale marble. Your footsteps echo with an unnatural clarity. To the south is the arrival room.`,
             exits: {
-                'SOUTH': { target: 'room_01_01_arrival', locked: false },
-                'NORTH': { target: 'room_02_01_bedroom', locked: false }
+                'SOUTH': { target: 'room_01_01_arrival', locked: false }
             },
             scenery: {},
             checkpoint: false
@@ -220,35 +219,35 @@ const GAME_DB = {
 
         room_02_01_bedroom: {
             id: 'room_02_01_bedroom',
-            episode: 2,
+            episode: 0,
             sequence: 1,
-            title: '02: THE SLEEPLESS ROOM',
+            title: '00: THE DESK',
             img: './assets/bedroom.png',
             effects: ['rain', 'lightning'],
-            desc: `A desk occupies the center of a dark room. A monitor casts pale blue light across scattered papers and an untouched mug. Rain hammers against the <span class="clickable-target" data-target-id="rain_window">window</span> — each sheet of water catching the light differently. A <span class="clickable-target" data-target-id="desk_monitor">terminal session</span> idles, cursor blinking. Beneath the keyboard, a <span class="clickable-target" data-target-id="desk_journal">journal</span> waits with dog-eared pages.`,
-            exits: {
-                'SOUTH': { target: 'room_01_02_corridor', locked: false }
-            },
+            desc: `Three weeks of notes cover the desk: printed forum threads, a photocopied police report, handwritten timelines connected by lines you can no longer follow. At the centre of it all — a <span class="clickable-target" data-target-id="cassette_player">cassette player</span>, recovered from the subject's apartment. It will not play ordinary tapes. Only the three it came with. The <span class="clickable-target" data-target-id="headphones">headphones</span> coiled beside it emit a faint oscillating tone even though nothing is plugged in. Your <span class="clickable-target" data-target-id="investigation_notes">notes</span> are beginning to feel like a maze with no centre.`,
+            exits: {},
             scenery: {
-                rain_window: {
-                    id: 'rain_window',
-                    name: 'Rain Window',
+                cassette_player: {
+                    id: 'cassette_player',
+                    name: 'Cassette Player',
                     required_tags: [],
-                    description: 'Rain scores diagonal lines down the glass. Beyond: a city reduced to amber grid lines in the dark. A bolt of lightning erases all colour for a half-second, leaving its negative burned in your eyes.',
+                    description: 'No brand markings. No serial number. The tape loaded inside is labelled in someone else\'s handwriting: "SESSION 01". When you pressed play earlier tonight it did not play music. It played a room — silence, then distant echoes of movement, then a sound like every fluorescent light in a long corridor failing at once. You\'ve listened four times. You still don\'t understand.',
                     loot: []
                 },
-                desk_monitor: {
-                    id: 'desk_monitor',
-                    name: 'Terminal',
+                headphones: {
+                    id: 'headphones',
+                    name: 'Headphones',
                     required_tags: [],
-                    description: 'The terminal log scrolls with fragmented output. Near the bottom a line repeats at irregular intervals: "> YOU SHOULD NOT BE HERE." The cursor blinks, waiting for a command you do not know.',
-                    loot: []
+                    description: 'The cord ends in a clean cut. They\'re connected to nothing. And yet they hum — a low oscillating tone you feel more than hear. When you hold them the buzz seems to shift, as though responding to something.',
+                    useDescription: 'You settle the headphones over your ears.\n\nThe buzz becomes immediate — not sound exactly, something older than sound. A pressure building behind your eyes. A frequency you feel in your teeth, in the small bones of your wrists.\n\nThe lamp blinks out. Your notes lift from the desk.\n\nThe room bleaches white at the edges and you grip the desk and you open your mouth and there is no longer anything to say it to.',
+                    loot: [],
+                    autoTransition: 'room_01_01_arrival'
                 },
-                desk_journal: {
-                    id: 'desk_journal',
-                    name: 'Journal',
+                investigation_notes: {
+                    id: 'investigation_notes',
+                    name: 'Investigation Notes',
                     required_tags: [],
-                    description: 'Handwritten notes, rain-warped. One entry remains legible: "Day 47: The door does not open anymore. But I can hear something on the other side."',
+                    description: 'Weeks of obsession in your own handwriting. A disappearance the authorities closed after six days. A subject last seen at a location that does not appear on any map you have found. The cassette player was returned to their family before it vanished again — and then arrived here, in a package with no postmark.',
                     loot: ['torn_journal']
                 }
             },

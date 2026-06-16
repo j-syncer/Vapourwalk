@@ -14,6 +14,7 @@ class Game {
         this.unlockedExits = {}; // Tracks permanently opened doors
         this._effectTimers = [];
         this._effectsRoomId = null;
+        this.pendingTransition = null;
 
         this.elements = {
             viewport: document.getElementById('viewport'),
@@ -45,6 +46,12 @@ class Game {
 
         this.elements.modalClose.addEventListener('click', () => {
             this.elements.modal.classList.remove('active');
+            if (this.pendingTransition) {
+                const target = this.pendingTransition;
+                this.pendingTransition = null;
+                this.currentRoom = target;
+                this.renderRoom();
+            }
         });
 
         this.elements.expandBtn.addEventListener('click', () => {
@@ -166,6 +173,15 @@ class Game {
                 this.penalizeWrongClick();
             }
         } else if (verb === 'USE') {
+            // Scenery that warps to a new room on use (no inventory item required)
+            if (scenery.autoTransition) {
+                const msg = scenery.useDescription || scenery.description;
+                this.showModal(msg);
+                this.pendingTransition = scenery.autoTransition;
+                this.drainStats(0, 8);
+                return;
+            }
+
             if (scenery.required_tags.length === 0) {
                 this.showModal('Nothing happens.');
                 this.penalizeWrongClick();
