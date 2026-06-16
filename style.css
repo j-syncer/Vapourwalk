@@ -498,17 +498,114 @@ body {
     animation: thunder-shake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
 }
 
-/* Responsive */
+/* Responsive — tablet */
 @media (max-width: 1024px) {
+    .stat { font-size: 0.75rem; }
+    .stat-bar-fill { width: 100px; }
+    .narrative-text { font-size: 0.85rem; }
+}
+
+/* Responsive — portrait mobile */
+@media (max-width: 600px), (max-width: 900px) and (orientation: portrait) {
+    /* Give narrative panel more vertical room */
+    .viewport { flex: 0.6; }
+    .narrative-panel { flex: 1.4; padding: 8px; gap: 5px; }
+
+    /* Stats bar: let it wrap to two rows */
+    .stats-bar {
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-bottom: 0;
+        align-items: center;
+    }
+
+    /* Shrink each stat row */
     .stat {
-        font-size: 0.75rem;
+        font-size: 0.65rem;
+        gap: 4px;
+        letter-spacing: 0;
+    }
+
+    /* Remove fixed min-widths that force overflow */
+    .stat-label {
+        min-width: auto;
+        font-size: 0.6rem;
     }
 
     .stat-bar-fill {
-        width: 100px;
+        width: 52px;
+        height: 7px;
     }
 
+    .stat-number {
+        min-width: auto;
+        font-size: 0.6rem;
+    }
+
+    /* Location label truncates if too long */
+    .stat.location {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .location .stat-number {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 130px;
+    }
+
+    /* Control buttons */
+    .control-btn {
+        padding: 4px 7px;
+        font-size: 0.8rem;
+        min-width: 30px;
+    }
+
+    /* Narrative text */
     .narrative-text {
+        font-size: 0.78rem;
+        padding: 7px;
+        line-height: 1.45;
+    }
+
+    /* Action dock */
+    .action-dock {
+        padding: 6px;
+        gap: 4px;
+    }
+
+    .verb-btn {
+        padding: 5px 7px;
+        font-size: 0.62rem;
+        letter-spacing: 0.3px;
+    }
+
+    .exit-btn {
+        padding: 5px 7px;
+        font-size: 0.62rem;
+        letter-spacing: 0.3px;
+    }
+
+    .inventory-display {
+        font-size: 0.62rem;
+        gap: 5px;
+    }
+
+    .inventory-item {
+        padding: 2px 5px;
+        font-size: 0.62rem;
+    }
+
+    /* Modal */
+    .modal-content {
+        padding: 20px;
+        max-width: calc(100vw - 30px);
+        max-height: 65vh;
+    }
+
+    .modal-text {
         font-size: 0.85rem;
+        max-height: 130px;
     }
 }
